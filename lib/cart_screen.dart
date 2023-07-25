@@ -1,105 +1,162 @@
 import 'package:flutter/material.dart';
 import 'models/product_model.dart';
 
-
-// Example of using the fetchProducts function in a StatefulWidget
 class CartScreen extends StatefulWidget {
   final List<Product> items;
 
-  const CartScreen({super.key, required this.items});
+  const CartScreen({Key? key, required this.items}) : super(key: key);
 
   @override
   _CartScreenState createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
+  void increaseQuantity(int index) {
+    setState(() {
+      widget.items[index].quantity++;
+    });
+  }
+
+  void decreaseQuantity(int index) {
+    setState(() {
+      if (widget.items[index].quantity > 1) {
+        widget.items[index].quantity--;
+      }
+    });
+  }
+
+  double calculateTotalPrice() {
+    double totalPrice = 0;
+    for (Product product in widget.items) {
+      totalPrice += product.price * product.quantity;
+    }
+    return totalPrice;
+  }
+
+  double calculateGST() {
+    double totalPrice = calculateTotalPrice();
+    return totalPrice * 0.18; // Assuming GST is 18%
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white60,
-          title: const Text(
-            'Cart',
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 17, color: Colors.black),
-          )),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Cart',
+          style: TextStyle(fontSize: 24, color: Colors.black),
+        ),
+      ),
       body: ListView.builder(
         itemCount: widget.items.length,
-        shrinkWrap: true,
         itemBuilder: (context, index) {
+          Product product = widget.items[index];
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
-              height: 140,
+              height: 150,
               width: double.infinity,
-              color: Colors.black12,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  const BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(0, 2),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          height: 80,
-                          width: 90,
-                          child: Image.network(widget.items[index].thumbnail),
-                        ),
-                      ],
+                    child: SizedBox(
+                      height: 80,
+                      width: 90,
+                      child: Image.network(product.thumbnail),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            product.description,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            '\$${product.price.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () => decreaseQuantity(index),
+                              ),
+                              Text(
+                                product.quantity.toString(),
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () => increaseQuantity(index),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.items[index].title,
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                            fontSize: 15, color: Colors.black),
+                        '${product.rating}',
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.black),
                       ),
-                      // SizedBox(width: 55,),
-                      const Text(
-                        'des',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      const SizedBox(height: 12),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Colors.black,
+                        onPressed: () {
+                          setState(() {
+                            widget.items.removeAt(index);
+                          });
+                        },
                       ),
-                      Text(
-                        '\$${widget.items[index].price.toStringAsFixed(2)}',
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                            fontSize: 15, color: Colors.black),
-                      ),
-
-                      // Row(
-                      //   children: <Widget>[
-                      //     _itemCount!=0? new  IconButton(icon: new Icon(Icons.remove),onPressed: ()=>setState(()=>_itemCount--),):new Container(),
-                      //     new Text(_itemCount.toString()),
-                      //     new IconButton(icon: new Icon(Icons.add),onPressed: ()=>setState(()=>_itemCount++))
-                      //   ],
-                      // ),
-
-
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        '${widget.items[index].rating}',
-                        style: const TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-                       const SizedBox(height: 28,),
-                       const IconButton(
-                        icon: Icon(Icons.delete),color: Colors.black,
-                        onPressed: null,
-                      ),
-
                     ],
                   ),
                 ],
@@ -107,6 +164,41 @@ class _CartScreenState extends State<CartScreen> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Items Price: \$${calculateTotalPrice().toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'GST (18%): \$${calculateGST().toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Total Price (incl. GST): \$${(calculateTotalPrice() + calculateGST()).toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

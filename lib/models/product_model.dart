@@ -1,4 +1,3 @@
-// Create a model class to represent the Product data
 class Product {
   final int id;
   final String title;
@@ -11,6 +10,7 @@ class Product {
   final String category;
   final String thumbnail;
   final List<String> images;
+  int quantity;
 
   Product({
     required this.id,
@@ -24,6 +24,7 @@ class Product {
     required this.category,
     required this.thumbnail,
     required this.images,
+    this.quantity = 1,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {

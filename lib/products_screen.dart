@@ -44,110 +44,157 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white60,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              const Text(
-                'E-Commerce App',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 17, color: Colors.black),
-              ),
-              const SizedBox(
-                width: 30,
-              ),
-              Container(
-                height: 35,
-                width: 50,
-                color: Colors.white24,
-                child: const Icon(
-                  Icons.dehaze_rounded,
-                  color: Colors.black45,
-                  size: 34.0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'E-Commerce App',
+          style: TextStyle(
+            fontSize: 26,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                    items: cartProducts,
+                  ),
                 ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CartScreen(items: cartProducts,)),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.shopping_cart,
-                    color: Colors.black54,
-                    size: 30.0,
-                  )),
-            ],
-          )),
+              );
+            },
+            icon: Stack(
+              children: [
+                Icon(
+                  Icons.shopping_cart,
+                  color: Colors.black54,
+                  size: 30.0,
+                ),
+                if (cartProducts.isNotEmpty)
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${cartProducts.length}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
       body: ListView.builder(
         itemCount: products.length,
-        shrinkWrap: true,
         itemBuilder: (context, index) {
+          Product product = products[index];
           return Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
-              height: 140,
-              width: double.infinity,
-              color: Colors.black12,
+              height: 160,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(0, 2),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: SizedBox(
-                      height: 80,
-                      width: 90,
-                      child: Image.network(products[index].thumbnail),
+                      height: 100,
+                      width: 100,
+                      child:
+                          Image.network(product.thumbnail, fit: BoxFit.cover),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        products[index].title,
-                        textAlign: TextAlign.start,
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.black),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            product.title,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            product.description,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '\$${product.price.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.blueGrey.shade900,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                            ),
+                            onPressed: cartProducts.contains(product)
+                                ? null
+                                : () {
+                                    setState(() {
+                                      cartProducts.add(product);
+                                    });
+                                  },
+                            child: Text(
+                              cartProducts.contains(product)
+                                  ? 'Added to Cart'
+                                  : 'Add to Cart',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
                       ),
-                      // SizedBox(width: 55,),
-                      const Text(
-                        'des',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        '\$${products[index].price.toStringAsFixed(2)}',
-                        textAlign: TextAlign.start,
-                        style:
-                            const TextStyle(fontSize: 15, color: Colors.black),
-                      ),
-
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueGrey.shade900),
-                          onPressed: cartProducts.any((Product element) =>
-                                  element == products[index])
-                              ? null
-                              : () {
-                                  cartProducts.add(products[index]);
-                                },
-                          child: const Text('Add to Cart')),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 6,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Text(
-                      '${products[index].rating}',
-                      style: const TextStyle(fontSize: 15, color: Colors.black),
+                      '${product.rating}',
+                      style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                   ),
                 ],
