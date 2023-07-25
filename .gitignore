@@ -1,0 +1,54 @@
+# Flutter/Dart specific
+*.iml
+*.lock
+**.android/
+**.ios/
+**.metadata
+**.flutter-plugins
+**.flutter-plugins-dependencies
+**.dart_tool/
+.vscode/
+/.idea/
+
+# Android specific
+**/build/
+**/local.properties
+
+# iOS specific
+**/Pods/
+**/Podfile.lock
+**/Podfile.lock.backup
+**/.symlinks/
+**/.symlinks/*/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Other
+*.log
+*.log.*
+*.tmp
+*.temp
+*.bak
+*.cache
+*.json-e
+*.DS_Store?
+*.sublime-*
+*.idea/
+*.iml
+*.iws
+*.ipr
+*.bak
+*.swp
+*.swo
+*.swn
+*.swo
+*.swn
