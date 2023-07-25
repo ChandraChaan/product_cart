@@ -40,12 +40,35 @@ class _ProductScreenState extends State<ProductScreen> {
     }
   }
 
+  Future<void> navigateToCartScreen() async {
+    if (cartProducts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your cart is empty. Add items to proceed.'),
+        ),
+      );
+    } else {
+      final List<Product> itemsInCart = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CartScreen(
+            items: List.from(cartProducts),
+          ),
+        ),
+      );
+
+      setState(() {
+        cartProducts = itemsInCart;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           'E-Commerce App',
           style: TextStyle(
             fontSize: 26,
@@ -56,18 +79,11 @@ class _ProductScreenState extends State<ProductScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(
-                    items: cartProducts,
-                  ),
-                ),
-              );
+              navigateToCartScreen();
             },
             icon: Stack(
               children: [
-                Icon(
+                const Icon(
                   Icons.shopping_cart,
                   color: Colors.black54,
                   size: 30.0,
@@ -77,14 +93,14 @@ class _ProductScreenState extends State<ProductScreen> {
                     right: 5,
                     top: 5,
                     child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
                         '${cartProducts.length}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                         ),
@@ -108,7 +124,7 @@ class _ProductScreenState extends State<ProductScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     offset: Offset(0, 2),
@@ -137,43 +153,47 @@ class _ProductScreenState extends State<ProductScreen> {
                         children: [
                           Text(
                             product.title,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             product.description,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Text(
                             '\$${product.price.toStringAsFixed(2)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               primary: Colors.blueGrey.shade900,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
                             ),
                             onPressed: cartProducts.contains(product)
-                                ? null
+                                ? null /*() {
+                                    setState(() {
+                                      cartProducts.remove(product);
+                                    });
+                                  }*/
                                 : () {
                                     setState(() {
                                       cartProducts.add(product);
@@ -181,9 +201,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                   },
                             child: Text(
                               cartProducts.contains(product)
-                                  ? 'Added to Cart'
+                                  ? /*'Remove from Cart'*/
+                                  'Added to Cart'
                                   : 'Add to Cart',
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
                         ],
@@ -194,7 +215,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     padding: const EdgeInsets.all(18.0),
                     child: Text(
                       '${product.rating}',
-                      style: TextStyle(fontSize: 20, color: Colors.black),
+                      style: const TextStyle(fontSize: 20, color: Colors.black),
                     ),
                   ),
                 ],

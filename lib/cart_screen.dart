@@ -43,6 +43,12 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black,),
+          onPressed: () {
+            Navigator.pop(context, widget.items);
+          },
+        ),
         title: const Text(
           'Cart',
           style: TextStyle(fontSize: 24, color: Colors.black),
@@ -60,8 +66,8 @@ class _CartScreenState extends State<CartScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  const BoxShadow(
+                boxShadow: const [
+                  BoxShadow(
                     color: Colors.black12,
                     offset: Offset(0, 2),
                     blurRadius: 6,
@@ -152,9 +158,16 @@ class _CartScreenState extends State<CartScreen> {
                         icon: const Icon(Icons.delete),
                         color: Colors.black,
                         onPressed: () {
-                          setState(() {
-                            widget.items.removeAt(index);
-                          });
+                          if (widget.items.length > 1) {
+                            setState(() {
+                              widget.items.removeAt(index);
+                            });
+                          } else {
+                            setState(() {
+                              widget.items.removeAt(index);
+                            });
+                            Navigator.pop(context, widget.items);
+                          }
                         },
                       ),
                     ],
