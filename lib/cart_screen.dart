@@ -111,7 +111,7 @@ class _CartScreenState extends State<CartScreen> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Text(
                             '\$${product.price.toStringAsFixed(2)}',
                             style: const TextStyle(
@@ -120,7 +120,7 @@ class _CartScreenState extends State<CartScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               IconButton(
